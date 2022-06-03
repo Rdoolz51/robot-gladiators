@@ -158,11 +158,31 @@ var startGame = function () {
 }
 
 var endGame = function () {
-    if (playerInfo.health > 0) {
-        window.alert("Great Job, you've survived the game! You now have a score of " + playerInfo.money + ".");
+    // if (playerInfo.health > 0) {
+    //     window.alert("Great Job, you've survived the game! You now have a score of " + playerInfo.money + ".");
+    // }
+    // else {
+    //     window.alert("You've lost your robot in battle.");
+    // }
+    window.alert("The game has ended, lets take a look at how you did!");
+
+    var highScore = localStorage.getItem("highScore");
+
+    if (highScore === null) {
+        highScore = 0;
     }
+
+    if (playerInfo.money > highScore) {
+        localStorage.setItem("highScore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+        window.alert(playerInfo.name + " now has the new high score of  " + playerInfo.money + "!");
+    }
+    else if (playerInfo.money == highScore) {
+        window.alert("You tied the current high score with a total of " + playerInfo.money + " Dollars!");
+
+    } 
     else {
-        window.alert("You've lost your robot in battle.");
+        window.alert("Your Score was: " + playerInfo.money + ". This score is " + (highScore - playerInfo.money) + " less than " + playerInfo.name + "'s high score of " + highScore + "!");
     }
 
     var playAgainConfirm = window.confirm("Would you like to play again?");
