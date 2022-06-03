@@ -9,34 +9,53 @@ var getPlayerName = function() {
     return name;
 }
 
+var fightOrSkip = function () {
+    //ask player if theyd like to fight or skip
+    var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
+
+    // if the `promptFight` is NOT a valid value, then execute the following statements.
+    if (!promptFight) {
+        window.alert("You need to provide a valid answer! Please try again!");
+        return fightOrSkip();
+    }
+
+    //converting the player's response to lowercase in order to make it case-insensitive. 
+    promptFight = promptFight.toLowerCase();
+    if (promptFight === "skip") {
+
+        //Confirming that the player actually wants to skip and didn't just misclick.
+        var confirmSkip = window.confirm("Are you sure you'd like to skip this battle?");
+
+        //Player has signaled that they want to skip and then confirmed it. so we skip.
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has chosen to skip the fight!");
+            //As player wins battles they are awarded money which they can then use to skip fights. Money keeps the player from infinitely skipping battles.
+            //subtract money from player for skipping
+            playerInfo.money = Math.max(0, playerInfo.money - 10);
+            
+            //return true if the player confirms that they meant to skip
+            return true;
+        }
+        else {
+
+            return false;
+        }
+    }
+
+}
 var fight = function (enemy) {
 
     //repeat and execute as long as the enemy robot is alive
 
     while (playerInfo.health > 0 && enemy.health > 0) {
+        
+        if (fightOrSkip()) {
+            //if true, leave fight by breaking the loop.
+            break;
+        }
 
         console.log(enemy.attack);
         console.log(playerInfo.attack);
-
-        //ask player if theyd like to fight or run
-        var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-
-        //if the player picks 'skip' confirm and then stop the loop.
-        if (promptFight === "skip" || promptFight === "SKIP" || promptFight === "Skip") {
-
-            //Confirming that the player actually wants to skip and didn't just misclick.
-            var confirmSkip = window.confirm("Are you sure you'd like to skip this battle?");
-
-            //Player has signaled that they want to skip and then confirmed it. so we skip.
-            if (confirmSkip) {
-                window.alert(playerInfo.name + " has chosen to skip the fight!");
-                //As player wins battles they are awarded money which they can then use to skip fights. Money keeps the player from infinitely skipping battles.
-                //subtract money from player for skipping
-                playerInfo.money = Math.max(0, playerInfo.money - 10);
-                console.log("playerInfo.money", playerInfo.money);
-                break;
-            }
-        }
 
         //player robot attacks enemy robot dealing random damage based on player's attack power.
         var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
@@ -80,6 +99,7 @@ var fight = function (enemy) {
     } //end of while loop
 
 } //end of fight()
+
 
 var startGame = function () {
 
